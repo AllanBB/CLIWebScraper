@@ -27,11 +27,11 @@ priceofitem = 0
 
 
 #GLOBAL VARIABLES
-URL_NUMBER = 32995028266
+#URL_NUMBER = 32995028266
 #URL_NUMBER = 32995023560
 #URL_NUMBER = 32995023311
 #URL_NUMBER = 32995023387
-EDGE_CASE_URL = 32995023387
+#EDGE_CASE_URL = 32995023387
 
 
 lower_range = int(sys.argv[1])
@@ -171,6 +171,34 @@ for URL_NUMBER in range(lower_range, upper_range):
     numOrders = getNumOrders()
     print("Total Number of orders made: " + numOrders)
 
+
+
+
+     # Create dictionary
+    dict_product_id_copy = copy.deepcopy(URL_Count)
+    dict_product_name_copy = copy.deepcopy(get_product_name())
+    dict_category_list = copy.deepcopy(get_category())
+    dict_last_date_purchased = copy.deepcopy(date_list[-1])
+    dict_rating = 'placeholder'
+    dict_date_scraped = datetime.datetime.today()
+    dict_last_page_reached = copy.deepcopy(current_page)
+    dict_num_transactions_copy = copy.deepcopy(total_transactions)
+    dict_date_list_copy = copy.deepcopy(date_list)
+    temp_dictionary = {'product_id': dict_product_id_copy, 'product_name': dict_product_name_copy,
+                       'category': dict_category_list, 'rating': dict_rating, 'last_purchase_date': dict_last_date_purchased, 'last_page_reached': dict_last_page_reached, 'num_transactions': dict_num_transactions_copy, 'transaction_list': dict_date_list_copy, 'date_scraped': dict_date_scraped
+                      } 
+    for i in temp_dictionary:
+        print(temp_dictionary[i])
+    client = pymongo.MongoClient(
+        "mongodb://allan:Spring2019@firstcluster-shard-00-00-wy2qu.mongodb.net:27017,firstcluster-shard-00-01-wy2qu.mongodb.net:27017,firstcluster-shard-00-02-wy2qu.mongodb.net:27017/test?ssl=true&replicaSet=FirstCluster-shard-0&authSource=admin&retryWrites=true")
+    db = client['test']
+    collection_products = db['products']
+    query = {'product_id': dict_product_id_copy}
+    new_value = {"$set": temp_dictionary}
+
+    if(collection_products.update_one(query, new_value, upsert=True)):
+        print("update_one")
+    client.close()
     # Create URL
     # url = 'https://feedback.aliexpress.com/display/evaluationProductDetailAjaxService.htm?callback=jQuery&productId=' + str(4000591272216) + '&type=default&page=1'
     #url ='https://www.aliexpress.com/item/32995023311.html'

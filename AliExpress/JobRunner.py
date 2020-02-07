@@ -10,8 +10,8 @@ class Webscrape(threading.Thread):
         os.system(command)
 
 node_number = 0
-increment_number = 100
-numThreads = 20
+increment_number = 10
+numThreads = 2
 #start_number = 32965410914+(increment_number*node_number*numThreads)
 start_number = 32995028266+(increment_number*node_number*numThreads)
 end_number = start_number+increment_number
@@ -38,5 +38,5 @@ while(threading.active_count()!=1):
     for each in list:
         print(each)
 
-    time.sleep(25)
+    time.sleep(20)
 
