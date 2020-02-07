@@ -27,15 +27,22 @@ priceofitem = 0
 
 
 #GLOBAL VARIABLES
-URL_NUMBER = 32995023311
-URL_NUMBER = 32995023387
+URL_NUMBER = 32995028266
+#URL_NUMBER = 32995023560
+#URL_NUMBER = 32995023311
+#URL_NUMBER = 32995023387
 EDGE_CASE_URL = 32995023387
+
+
+lower_range = int(sys.argv[1])
+upper_range = int(sys.argv[2])
 
 
 def getRating():
     ratingIndex = feedbackSoup.find('<div class="star-view-big"><span style="')
     ratingString = feedbackSoup[ratingIndex+46:ratingIndex+50]
-    print(ratingString)
+    return ratingString
+    #print(ratingString)
 
 def isPageEmpty():
     ratingIndex = feedbackSoup.find('<div class="star-view-big"><span style="')
@@ -48,14 +55,17 @@ def getNumOrders():
     numOrderIndex  = page_soup.find('tradeCount')
     endOderIndex = page_soup.find(',"tradeCountUnit":')
     numOrderString = page_soup[numOrderIndex+12:endOderIndex] 
+    #print(page_soup )
+    return numOrderString
     print(numOrderString)
 
 
 
 
 
-for URL_NUMBER in range(URL_NUMBER, URL_NUMBER+1):
- 
+for URL_NUMBER in range(lower_range, upper_range):
+    
+    print("Now going though product: " +str(URL_NUMBER))
     ################################ Make feedback Soup ############################# START
     start_time = time.time()
 
@@ -154,12 +164,12 @@ for URL_NUMBER in range(URL_NUMBER, URL_NUMBER+1):
     #####################   ########################
 
     ##################### Formatted output for testing  ########################
-    print("Rating:")
-    getRating()
-    print("Item ID Number")
-    print(URL_NUMBER)
-    print("Total Number of orders made: ")
-    getNumOrders()
+    rating = getRating()
+    print("Rating: " + rating)
+    productNumber = URL_NUMBER
+    print("Item ID Number: "+ str(productNumber))
+    numOrders = getNumOrders()
+    print("Total Number of orders made: " + numOrders)
 
     # Create URL
     # url = 'https://feedback.aliexpress.com/display/evaluationProductDetailAjaxService.htm?callback=jQuery&productId=' + str(4000591272216) + '&type=default&page=1'
