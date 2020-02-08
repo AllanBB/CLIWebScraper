@@ -175,18 +175,20 @@ for URL_NUMBER in range(lower_range, upper_range):
 
 
      # Create dictionary
-    dict_product_id_copy = copy.deepcopy(URL_Count)
-    dict_product_name_copy = copy.deepcopy(get_product_name())
-    dict_category_list = copy.deepcopy(get_category())
-    dict_last_date_purchased = copy.deepcopy(date_list[-1])
-    dict_rating = 'placeholder'
+    dict_product_id_copy = copy.deepcopy(productNumber)
+    #dict_product_name_copy = copy.deepcopy(get_product_name())
+    #dict_category_list = copy.deepcopy(get_category())
+    #dict_last_date_purchased = copy.deepcopy(date_list[-1])
+    dict_rating = copy.deepcopy(rating)
     dict_date_scraped = datetime.datetime.today()
-    dict_last_page_reached = copy.deepcopy(current_page)
-    dict_num_transactions_copy = copy.deepcopy(total_transactions)
-    dict_date_list_copy = copy.deepcopy(date_list)
-    temp_dictionary = {'product_id': dict_product_id_copy, 'product_name': dict_product_name_copy,
-                       'category': dict_category_list, 'rating': dict_rating, 'last_purchase_date': dict_last_date_purchased, 'last_page_reached': dict_last_page_reached, 'num_transactions': dict_num_transactions_copy, 'transaction_list': dict_date_list_copy, 'date_scraped': dict_date_scraped
-                      } 
+    #dict_last_page_reached = copy.deepcopy(current_page)
+    dict_num_transactions_copy = copy.deepcopy(numOrders)
+    #dict_date_list_copy = copy.deepcopy(date_list)
+    temp_dictionary = {'product_id': dict_product_id_copy, 'rating': dict_rating, 'num_transactions': dict_num_transactions_copy, 'date_scraped': dict_date_scraped} 
+#    temp_dictionary = {'product_id': dict_product_id_copy, 'product_name': dict_product_name_copy, 'category': dict_category_list, 
+#    					'rating': dict_rating, 'last_purchase_date': dict_last_date_purchased, 'last_page_reached': dict_last_page_reached, 
+ #   					'num_transactions': dict_num_transactions_copy, 'transaction_list': dict_date_list_copy, 'date_scraped': dict_date_scraped
+#                      } 
     for i in temp_dictionary:
         print(temp_dictionary[i])
     client = pymongo.MongoClient(
