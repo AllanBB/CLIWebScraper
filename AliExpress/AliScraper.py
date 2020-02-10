@@ -33,6 +33,7 @@ priceofitem = 0
 #URL_NUMBER = 32995023387
 #EDGE_CASE_URL = 32995023387
 
+MinimumNumberOFOrders = 50
 
 lower_range = int(sys.argv[1])
 upper_range = int(sys.argv[2])
@@ -46,26 +47,34 @@ def getRating():
 
 def isPageEmpty():
     ratingIndex = feedbackSoup.find('<div class="star-view-big"><span style="')
+
+
     if(ratingIndex == -1):
-        return -1
+    	return -1
     else:
         return
 
 def getNumOrders():
     numOrderIndex  = page_soup.find('tradeCount')
-    endOderIndex = page_soup.find(',"tradeCountUnit":')
-    numOrderString = page_soup[numOrderIndex+12:endOderIndex] 
+    endOrderIndex = page_soup.find(',"tradeCountUnit":')
+    numOrderString = page_soup[numOrderIndex+12:endOrderIndex] 
     #print(page_soup )
     return numOrderString
-    print(numOrderString)
+    #print(numOrderString)
 
+def getProductName():
+	numTitleIndex  = page_soup.find('<title>')
+	endtitleIndex = page_soup.find('</title>')
 
+	productNameReturn = page_soup[numTitleIndex+7:endtitleIndex] 
+	#print(page_soup )
+	return productNameReturn
 
 
 
 for URL_NUMBER in range(lower_range, upper_range):
     
-    print("Now going though product: " +str(URL_NUMBER))
+    #print("Now going though product: " +str(URL_NUMBER))
     ################################ Make feedback Soup ############################# START
     start_time = time.time()
 
@@ -76,18 +85,14 @@ for URL_NUMBER in range(lower_range, upper_range):
         feedbackHTML = uClient.read()
         uClient.close()
     except:
-        print("this is not good")
+    	continue
+        #print("this is not good Bad feedback")
         #continue
 
     feedbackSoup = str(soup(feedbackHTML, "html.parser"))
 
     #print("feedback page took: %s seconds ---" % (time.time() - start_time))
     ################################################################################# END
-
-
-    pageCheck = isPageEmpty()
-    if(pageCheck == -1):
-        continue
 
 
 
@@ -103,13 +108,22 @@ for URL_NUMBER in range(lower_range, upper_range):
         page_html = uClient.read()
         uClient.close()
     except:
-        print("this is not good")
-            #continue
+    	continue
+        #print("this is not good bad Regular URL")
+        
        
     page_soup = str(soup(page_html, "html.parser"))
 
     #print("Regular page took: %s seconds ---" % (time.time() - start_time))
     ################################################################################# END
+
+
+
+	
+    pageCheck = isPageEmpty()
+    if(pageCheck == -1):
+        continue
+
 
     
     #page_html =  makeSoup()
@@ -165,18 +179,23 @@ for URL_NUMBER in range(lower_range, upper_range):
 
     ##################### Formatted output for testing  ########################
     rating = getRating()
-    print("Rating: " + rating)
+    #print("Rating: " + rating)
     productNumber = URL_NUMBER
-    print("Item ID Number: "+ str(productNumber))
-    numOrders = getNumOrders()
-    print("Total Number of orders made: " + numOrders)
+    #print("Item ID Number: "+ str(productNumber))
+    numOrders = int(getNumOrders())
+    #numOrders = getNumOrders()
+   # print("Total Number of orders made: " + numOrders)
 
-
+    if(numOrders<=MinimumNumberOFOrders ):
+    	continue
+    #print("Total Number of orders made: " + numOrders)
+    productName = getProductName()
+    #print(productName)
 
 
      # Create dictionary
     dict_product_id_copy = copy.deepcopy(productNumber)
-    #dict_product_name_copy = copy.deepcopy(get_product_name())
+    dict_product_name_copy = copy.deepcopy(productName)
     #dict_category_list = copy.deepcopy(get_category())
     #dict_last_date_purchased = copy.deepcopy(date_list[-1])
     dict_rating = copy.deepcopy(rating)
@@ -184,13 +203,13 @@ for URL_NUMBER in range(lower_range, upper_range):
     #dict_last_page_reached = copy.deepcopy(current_page)
     dict_num_transactions_copy = copy.deepcopy(numOrders)
     #dict_date_list_copy = copy.deepcopy(date_list)
-    temp_dictionary = {'product_id': dict_product_id_copy, 'rating': dict_rating, 'num_transactions': dict_num_transactions_copy, 'date_scraped': dict_date_scraped} 
+    temp_dictionary = {'product_id': dict_product_id_copy, 'product_name': dict_product_name_copy, 'rating': dict_rating, 'num_transactions': dict_num_transactions_copy, 'date_scraped': dict_date_scraped} 
 #    temp_dictionary = {'product_id': dict_product_id_copy, 'product_name': dict_product_name_copy, 'category': dict_category_list, 
 #    					'rating': dict_rating, 'last_purchase_date': dict_last_date_purchased, 'last_page_reached': dict_last_page_reached, 
  #   					'num_transactions': dict_num_transactions_copy, 'transaction_list': dict_date_list_copy, 'date_scraped': dict_date_scraped
 #                      } 
-    for i in temp_dictionary:
-        print(temp_dictionary[i])
+    #for i in temp_dictionary:
+        #print(temp_dictionary[i])
     client = pymongo.MongoClient(
         "mongodb://allan:Spring2019@firstcluster-shard-00-00-wy2qu.mongodb.net:27017,firstcluster-shard-00-01-wy2qu.mongodb.net:27017,firstcluster-shard-00-02-wy2qu.mongodb.net:27017/test?ssl=true&replicaSet=FirstCluster-shard-0&authSource=admin&retryWrites=true")
     db = client['test']
@@ -198,9 +217,13 @@ for URL_NUMBER in range(lower_range, upper_range):
     query = {'product_id': dict_product_id_copy}
     new_value = {"$set": temp_dictionary}
 
-    if(collection_products.update_one(query, new_value, upsert=True)):
-        print("update_one")
+    collection_products.update_one(query, new_value, upsert=True)
+    #if(collection_products.update_one(query, new_value, upsert=True)):
+        #print("update_one")
+
     client.close()
+
+
     # Create URL
     # url = 'https://feedback.aliexpress.com/display/evaluationProductDetailAjaxService.htm?callback=jQuery&productId=' + str(4000591272216) + '&type=default&page=1'
     #url ='https://www.aliexpress.com/item/32995023311.html'

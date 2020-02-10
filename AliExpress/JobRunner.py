@@ -10,10 +10,10 @@ class Webscrape(threading.Thread):
         os.system(command)
 
 node_number = 0
-increment_number = 10
-numThreads = 2
+increment_number = 1
+numThreads = 1
 #start_number = 32965410914+(increment_number*node_number*numThreads)
-start_number = 32995028266+(increment_number*node_number*numThreads)
+start_number = 32840627909+(increment_number*node_number*numThreads)
 end_number = start_number+increment_number
 
 #os.mkdir('Scans')
@@ -26,7 +26,7 @@ for t in range(numThreads):
     print(command)
     t = Webscrape()
     t.start()
-    time.sleep(.4)
+    time.sleep(2)
 
     start_number = end_number + 1
     end_number = start_number + increment_number
@@ -38,5 +38,5 @@ while(threading.active_count()!=1):
     for each in list:
         print(each)
 
-    time.sleep(20)
+    time.sleep(60)
 
