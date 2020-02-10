@@ -10,7 +10,7 @@ class Webscrape(threading.Thread):
         os.system(command)
 
 node_number = 0
-increment_number = 1
+increment_number = 10000
 numThreads = 1
 #start_number = 32965410914+(increment_number*node_number*numThreads)
 start_number = 32840627909+(increment_number*node_number*numThreads)
