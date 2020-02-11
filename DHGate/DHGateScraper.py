@@ -40,14 +40,15 @@ upper_range = int(sys.argv[2])
 
 
 def getRating():
-    ratingIndex = feedbackSoup.find('<div class="star-view-big"><span style="')
-    ratingString = feedbackSoup[ratingIndex+46:ratingIndex+50]
+    #ratingIndex = feedbackSoup.find('<div class="star-view-big"><span style="')
+    #ratingString = feedbackSoup[ratingIndex+46:ratingIndex+50]
+    print(feedbackSoup)
     return ratingString
     #print(ratingString)
 
 def isPageEmpty():
     ratingIndex = feedbackSoup.find('<div class="star-view-big"><span style="')
-
+    print(feedbackSoup)
 
     if(ratingIndex == -1):
     	return -1
@@ -78,19 +79,20 @@ for URL_NUMBER in range(lower_range, upper_range):
     ################################ Make feedback Soup ############################# START
     start_time = time.time()
 
-
-    feedbackURL = 'https://feedback.aliexpress.com/display/productEvaluation.htm?productId='+ str(URL_NUMBER) +'&ownerMemberId=2&type=default&page=1'
+    #https://www.dhgate.com/product/2017-classical-all-white-black-gray-low-high/417585875.html
+    feedbackURL = 'https://www.dhgate.com/product/2017-classical-all-white-black-gray-low-high/'+ str(URL_NUMBER) +'.html'
     try:
-        uClient = uReq(feedbackURL)
+        uClient = uReq(feedbackURL)       
         feedbackHTML = uClient.read()
         uClient.close()
+
     except:
     	continue
         #print("this is not good Bad feedback")
         #continue
 
     feedbackSoup = str(soup(feedbackHTML, "html.parser"))
-
+    print(feedbackSoup)
     #print("feedback page took: %s seconds ---" % (time.time() - start_time))
     ################################################################################# END
 

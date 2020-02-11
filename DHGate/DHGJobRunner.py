@@ -23,7 +23,7 @@ print("Starting and running thread 1")
 
 for t in range(numThreads):
 
-    command = "python DHGScraper.py " + str(start_number)+ " " + str(end_number)
+    command = "python DHGateScraper.py " + str(start_number)+ " " + str(end_number)
     print(command)
     t = Webscrape()
     t.start()
