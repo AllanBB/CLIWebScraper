@@ -11,7 +11,7 @@ class Webscrape(threading.Thread):
 
 node_number = 0
 increment_number = 10000
-numThreads = 1
+numThreads = 10
 #start_number = 32965410914+(increment_number*node_number*numThreads)
 start_number = 32840627909+(increment_number*node_number*numThreads)
 end_number = start_number+increment_number
